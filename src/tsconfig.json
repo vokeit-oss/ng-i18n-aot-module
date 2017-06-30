@@ -1,0 +1,35 @@
+{
+    "angularCompilerOptions": {
+    "skipTemplateCodegen":    true,
+        "strictMetadataEmit": true
+    },
+    "compilerOptions":        {
+        "baseUrl":                ".",
+        "declaration":            true,
+        "experimentalDecorators": true,
+        "inlineSources":          true,
+        "lib":                    [
+            "es2015",
+            "dom"
+        ],
+        "module":                 "es2015",
+        "moduleResolution":       "node",
+        "noImplicitAny":          true,
+        "outDir":                 "../dist",
+        "paths":                  {
+            "@angular/core": [
+                "../node_modules/@angular/core"
+            ]
+        },
+        "removeComments":         true,
+        "rootDir":                ".",
+        "skipLibCheck":           true,
+        "sourceMap":              true,
+        "strictNullChecks":       true,
+        "stripInternal":          true,
+        "target":                 "es5"
+    },
+    "files":                  [
+        "./locale-service/index.ts"
+    ]
+}
