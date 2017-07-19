@@ -4,6 +4,9 @@ export default {
     sourceMap:  false,
     format:     'umd',
     moduleName: 'ngI18nAotModule',
+    external:   [
+        '@angular/core'
+    ],
     globals:    {
         '@angular/core': 'ng.core'
     }
