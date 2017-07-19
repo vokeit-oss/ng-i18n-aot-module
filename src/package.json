@@ -1,6 +1,6 @@
 {
     "name":             "@actra-development-oss/ng-i18n-aot-module",
-    "description":      "angular 4 i18n pre-loader for webpack 2 to support AOT with dynamic locale changes",
+    "description":      "angular 4 i18n supporter module for @actra-development-oss/ng-i18n-aot-loader",
     "keywords":         [
         "angular",
         "aot",
@@ -8,7 +8,7 @@
         "webpack"
     ],
     "license":          "MIT",
-    "version":          "1.0.0",
+    "version":          "1.0.1",
     "author":           {
         "name":  "Gabriel Schuster - actra.development",
         "email": "opensource@actra.de",
