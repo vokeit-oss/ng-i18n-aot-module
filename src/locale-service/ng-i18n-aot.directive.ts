@@ -29,6 +29,7 @@
  */
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Directive,
     Input,
     TemplateRef,
@@ -49,15 +50,17 @@ export class NgI18nAotDirective implements AfterViewInit {
     protected ngI18nAotService: NgI18nAotService;
     protected templateReference: TemplateRef<any>;
     protected viewContainerReference: ViewContainerRef;
+    protected changeDetectorRefeference: ChangeDetectorRef;
     protected id: string;
     protected locale: string;
     protected isDefault: boolean = false;
     
     
-    constructor(ngI18nAotService: NgI18nAotService, templateReference: TemplateRef<any>, viewContainerReference: ViewContainerRef) {
-        this.ngI18nAotService       = ngI18nAotService;
-        this.templateReference      = templateReference;
-        this.viewContainerReference = viewContainerReference;
+    constructor(ngI18nAotService: NgI18nAotService, templateReference: TemplateRef<any>, viewContainerReference: ViewContainerRef, changeDetectorRefeference: ChangeDetectorRef) {
+        this.ngI18nAotService          = ngI18nAotService;
+        this.templateReference         = templateReference;
+        this.viewContainerReference    = viewContainerReference;
+        this.changeDetectorRefeference = changeDetectorRefeference;
         
         // Hide until the view is initialized
         this.viewContainerReference.clear();
@@ -67,6 +70,9 @@ export class NgI18nAotDirective implements AfterViewInit {
     public ngAfterViewInit(): void {
         this.ngI18nAotService.subscribe(this.id, this.locale, this.isDefault, (display: boolean) => {
             display ? this.viewContainerReference.createEmbeddedView(this.templateReference) : this.viewContainerReference.clear();
+            
+            // Force change detection as with the newly created view changes for e.g. *ngIf might not be detected
+            this.changeDetectorRefeference.detectChanges();
         });
     }
     
