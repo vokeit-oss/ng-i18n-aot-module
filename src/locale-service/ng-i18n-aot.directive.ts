@@ -32,6 +32,7 @@ import {
     ChangeDetectorRef,
     Directive,
     Input,
+    OnDestroy,
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
@@ -46,8 +47,9 @@ import { NgI18nAotService } from './ng-i18n-aot.service';
 @Directive({
     selector: '[ngI18nAot]'
 })
-export class NgI18nAotDirective implements AfterViewInit {
+export class NgI18nAotDirective implements AfterViewInit, OnDestroy {
     protected ngI18nAotService: NgI18nAotService;
+    protected ngI18nAotServiceUnsubscribeCallback: () => void;
     protected templateReference: TemplateRef<any>;
     protected viewContainerReference: ViewContainerRef;
     protected changeDetectorReference: ChangeDetectorRef;
@@ -68,12 +70,17 @@ export class NgI18nAotDirective implements AfterViewInit {
     
     
     public ngAfterViewInit(): void {
-        this.ngI18nAotService.subscribe(this.id, this.locale, this.isDefault, (display: boolean) => {
+        this.ngI18nAotServiceUnsubscribeCallback = this.ngI18nAotService.subscribe(this.id, this.locale, this.isDefault, (display: boolean) => {
             display ? this.viewContainerReference.createEmbeddedView(this.templateReference) : this.viewContainerReference.clear();
             
             // Force change detection as with the newly created view changes for e.g. *ngIf might not be detected
             this.changeDetectorReference.detectChanges();
         });
+    }
+    
+    
+    public ngOnDestroy(): void {
+        this.ngI18nAotServiceUnsubscribeCallback();
     }
     
     
