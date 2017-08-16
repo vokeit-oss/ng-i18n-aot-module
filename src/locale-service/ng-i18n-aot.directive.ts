@@ -71,7 +71,12 @@ export class NgI18nAotDirective implements AfterViewInit, OnDestroy {
     
     public ngAfterViewInit(): void {
         this.ngI18nAotServiceUnsubscribeCallback = this.ngI18nAotService.subscribe(this.id, this.locale, this.isDefault, (display: boolean) => {
-            display ? this.viewContainerReference.createEmbeddedView(this.templateReference) : this.viewContainerReference.clear();
+            // Clear the view first, otherwise content may be replicated
+            this.viewContainerReference.clear();
+            
+            if(display) {
+                this.viewContainerReference.createEmbeddedView(this.templateReference);
+            }
             
             // Force change detection as with the newly created view changes for e.g. *ngIf might not be detected
             this.changeDetectorReference.detectChanges();
