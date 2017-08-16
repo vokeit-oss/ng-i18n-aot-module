@@ -66,6 +66,9 @@ export class NgI18nAotDirective implements AfterViewInit, OnDestroy {
         
         // Hide until the view is initialized
         this.viewContainerReference.clear();
+        
+        // Force change detection
+        this.changeDetectorReference.detectChanges();
     }
     
     
