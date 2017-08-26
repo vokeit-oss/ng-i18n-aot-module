@@ -1,6 +1,6 @@
 {
     "name":             "@actra-development-oss/ng-i18n-aot-module",
-    "description":      "angular 4 i18n supporter module for @actra-development-oss/ng-i18n-aot-loader",
+    "description":      "angular 4 / 5 i18n supporter module for @actra-development-oss/ng-i18n-aot-loader",
     "keywords":         [
         "angular",
         "aot",
@@ -8,7 +8,7 @@
         "webpack"
     ],
     "license":          "MIT",
-    "version":          "1.0.5",
+    "version":          "1.0.6",
     "author":           {
         "name":  "Gabriel Schuster - actra.development",
         "email": "opensource@actra.de",
@@ -28,14 +28,14 @@
         "access":   "public"
     },
     "dependencies":     {
-        "@angular/core": "^4.1.0"
+        "@angular/core": "5.0.0-beta.3"
     },
     "devDependencies":  {
-        "@angular/cli":              "1.2.1",
-        "@angular/common":           "^4.1.0",
-        "@angular/compiler":         "^4.1.0",
-        "@angular/compiler-cli":     "^4.1.0",
-        "@angular/language-service": "^4.1.0",
+        "@angular/cli":              "1.4.0-rc.1",
+        "@angular/common":           "5.0.0-beta.3",
+        "@angular/compiler":         "5.0.0-beta.3",
+        "@angular/compiler-cli":     "5.0.0-beta.3",
+        "@angular/language-service": "5.0.0-beta.3",
         
         
         "mkdirp":      "0.5.1",
