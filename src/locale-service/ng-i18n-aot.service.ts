@@ -35,10 +35,10 @@ export class NgI18nAotService {
     /**
      * Set a locale, automatically renders all translatable containers
      */
-    public setLocale(locale: string): void {
-        this.locale = locale;
+    public setLocale(locale: string | null = null): void {
+        this.locale = locale || DefaultLocaleIdentifier;
         
-        this.renderAll(locale);
+        this.renderAll(<string>locale);
     }
     
     
@@ -47,6 +47,14 @@ export class NgI18nAotService {
      */
     public getLocale(): string {
         return this.locale;
+    }
+    
+    
+    /**
+     * Check if the current locale is the default locale
+     */
+    public isDefaultLocale(): boolean {
+        return this.getLocale() === DefaultLocaleIdentifier;
     }
     
     
