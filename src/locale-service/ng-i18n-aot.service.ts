@@ -24,20 +24,119 @@
  */
 
 
+/**
+ * Basic libs
+ */
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+
+
 const DefaultLocaleIdentifier: string = '_____default-$$$-locale_____';
 
 
 export class NgI18nAotService {
-    protected map: {[key: string]: {[key: string]: (display: boolean) => void}} = {};
-    protected locale: string = DefaultLocaleIdentifier;
+    protected localeMap: {[key: string]: string}                                             = {};
+    protected locale: string                                                                 = DefaultLocaleIdentifier;
+    protected locale$: BehaviorSubject<string>                                               = new BehaviorSubject<string>(DefaultLocaleIdentifier);
+    protected forceLocaleExists: boolean                                                     = false;
+    protected translationIdMap: {[key: string]: {[key: string]: (display: boolean) => void}} = {};
+    
+    
+    constructor(locales: {[key: string]: string} = {}, forceLocaleExists: boolean = false) {
+        this.registerLocales(locales);
+        this.setForceLocaleExists(forceLocaleExists);
+    }
+    
+    
+    /**
+     * Set the flag to force locale existance on the locale map when trying to set the current locale
+     */
+    public setForceLocaleExists(forceLocaleExists: boolean = false) {
+        this.forceLocaleExists = forceLocaleExists;
+    }
+    
+    
+    /**
+     * Get the flag to force locale existance on the locale map when trying to set the current locale
+     */
+    public getForceLocaleExists(): boolean {
+        return this.forceLocaleExists;
+    }
+    
+    
+    /**
+     * Register multiple locales on the locale map
+     */
+    public registerLocales(locales: {[key: string]: string}): void {
+        for (var code in locales) {
+            if(!locales.hasOwnProperty(code)) {
+                continue;
+            }
+            
+            this.registerLocale(code, locales[code]);
+        }
+    }
+    
+    
+    /**
+     * Register a locale on the locale map
+     */
+    public registerLocale(code: string, name: string): void {
+        this.localeMap[code] = name;
+    }
+    
+    
+    /**
+     * Check if a locale exists on the map
+     */
+    public hasLocale(code: string): boolean {
+        return !!(this.localeMap.hasOwnProperty(code) && 'string' === typeof this.localeMap[code]);
+    }
+    
+    
+    /**
+     * Get the locale name for a locale code
+     */
+    public getLocaleName(code: string): string | null {
+        return this.hasLocale(code) ? this.localeMap[code] : null;
+    }
+    
+    
+    /**
+     * Get all registered locales
+     */
+    public getLocales(): {[key: string]: string} {
+        return this.localeMap;
+    }
+    
+    
+    /**
+     * Unregister a locale
+     */
+    public unregisterLocale(code: string): void {
+        delete this.localeMap[code];
+    }
+    
+    
+    /**
+     * Clear all locales
+     */
+    public clearLocales(): void {
+        this.localeMap = {};
+    }
     
     
     /**
      * Set a locale, automatically renders all translatable containers
      */
     public setLocale(locale: string | null = null): void {
+        if('string' === typeof locale && this.getForceLocaleExists() && !this.hasLocale(<string>locale)) {
+            return;
+        }
+        
         this.locale = locale || DefaultLocaleIdentifier;
         
+        this.locale$.next(this.locale);
         this.renderAll(<string>locale);
     }
     
@@ -51,10 +150,18 @@ export class NgI18nAotService {
     
     
     /**
-     * Check if the current locale is the default locale
+     * Get the locale stream
      */
-    public isDefaultLocale(): boolean {
-        return this.getLocale() === DefaultLocaleIdentifier;
+    public getLocaleStream(): Observable<string> {
+        return this.locale$.asObservable();
+    }
+    
+    
+    /**
+     * Check if the (current) locale is the default locale
+     */
+    public isDefaultLocale(locale?: string): boolean {
+        return DefaultLocaleIdentifier === (locale ? locale : this.getLocale());
     }
     
     
@@ -62,15 +169,15 @@ export class NgI18nAotService {
      * Subscribe to changes, renderer callback is executed on every change with a flag indicating if new locale matches the one the renderer is subscribed for
      */
     public subscribe(id: string, locale: string, isDefault: boolean, renderer: (display: boolean) => void): () => void {
-        if(!(id in this.map)) {
-            this.map[id] = <{[key: string]: (display: boolean) => void}>{};
+        if(!(id in this.translationIdMap)) {
+            this.translationIdMap[id] = <{[key: string]: (display: boolean) => void}>{};
         }
         
-        this.map[id][isDefault ? DefaultLocaleIdentifier : locale] = renderer;
+        this.translationIdMap[id][isDefault ? DefaultLocaleIdentifier : locale] = renderer;
         
         this.render(id, this.getLocale());
         
-        return () => { delete this.map[id][isDefault ? DefaultLocaleIdentifier : locale]; };
+        return () => { delete this.translationIdMap[id][isDefault ? DefaultLocaleIdentifier : locale]; };
     }
     
     
@@ -78,7 +185,7 @@ export class NgI18nAotService {
      * Render all translatable containers, used after changing the locale
      */
     protected renderAll(locale: string): void {
-        Object.keys(this.map).forEach((id: string) => {
+        Object.keys(this.translationIdMap).forEach((id: string) => {
             this.render(id, locale);
         });
     }
@@ -88,10 +195,10 @@ export class NgI18nAotService {
      * Render a single translatable container identified by id
      */
     protected render(id: string, locale: string): void {
-        let setLocale: string = Object.keys(this.map[id]).filter((checkLocale: string) => !!(checkLocale === locale)).length ? locale : DefaultLocaleIdentifier;
+        let setLocale: string = Object.keys(this.translationIdMap[id]).filter((checkLocale: string) => !!(checkLocale === locale)).length ? locale : DefaultLocaleIdentifier;
         
-        Object.keys(this.map[id]).every((checkLocale: string): boolean => {
-            this.map[id][checkLocale]((setLocale === checkLocale));
+        Object.keys(this.translationIdMap[id]).every((checkLocale: string): boolean => {
+            this.translationIdMap[id][checkLocale]((setLocale === checkLocale));
             
             return true;
         });

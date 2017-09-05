@@ -5,9 +5,13 @@ export default {
     format:     'umd',
     moduleName: 'ngI18nAotModule',
     external:   [
-        '@angular/core'
+        '@angular/core',
+        'rxjs/BehaviorSubject',
+        'rxjs/Observable'
     ],
     globals:    {
-        '@angular/core': 'ng.core'
+        '@angular/core':        'ng.core',
+        'rxjs/BehaviorSubject': 'BehaviorSubject',
+        'rxjs/Observable':      'Observable'
     }
 }
