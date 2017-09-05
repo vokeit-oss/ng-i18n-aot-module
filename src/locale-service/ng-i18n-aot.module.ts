@@ -28,6 +28,7 @@
  * Basic libs
  */
 import {
+    InjectionToken,
     ModuleWithProviders,
     NgModule
 } from '@angular/core';
@@ -40,7 +41,11 @@ import { NgI18nAotDirective } from './ng-i18n-aot.directive';
 import { NgI18nAotService } from './ng-i18n-aot.service';
 
 
-export function NgI18nAotServiceFactory(options: {locales?: {[key: string]: string}, forceLocaleExists?: boolean}): NgI18nAotService {
+export type NgI18nAotOptions                                         = {locales?: {[key: string]: string}, forceLocaleExists?: boolean};
+export const NgI18nAotOptionsToken: InjectionToken<NgI18nAotOptions> = new InjectionToken<NgI18nAotOptions>('NgI18nAotOptions');
+
+
+export function NgI18nAotServiceFactory(options: NgI18nAotOptions): NgI18nAotService {
     return new NgI18nAotService(options.hasOwnProperty('locales') ? options.locales : {}, options.hasOwnProperty('forceLocaleExists') ? options.forceLocaleExists : false);
 }
 
@@ -55,9 +60,13 @@ export class NgI18nAotModule {
             ngModule:  NgI18nAotModule,
             providers: [
                 {
+                    provide:  NgI18nAotOptionsToken,
+                    useValue: <NgI18nAotOptions>(options || {})
+                },
+                {
                     provide:    NgI18nAotService,
                     useFactory: NgI18nAotServiceFactory,
-                    deps:       [options || {}]
+                    deps:       [NgI18nAotOptionsToken]
                 }
             ]
         }

@@ -27,6 +27,7 @@
 /**
  * Basic libs
  */
+import { Optional } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -42,7 +43,7 @@ export class NgI18nAotService {
     protected translationIdMap: {[key: string]: {[key: string]: (display: boolean) => void}} = {};
     
     
-    constructor(locales: {[key: string]: string} = {}, forceLocaleExists: boolean = false) {
+    constructor(@Optional() locales: {[key: string]: string} = {}, @Optional() forceLocaleExists: boolean = false) {
         this.registerLocales(locales);
         this.setForceLocaleExists(forceLocaleExists);
     }
