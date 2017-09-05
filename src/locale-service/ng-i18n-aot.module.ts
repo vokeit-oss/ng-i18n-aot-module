@@ -40,15 +40,26 @@ import { NgI18nAotDirective } from './ng-i18n-aot.directive';
 import { NgI18nAotService } from './ng-i18n-aot.service';
 
 
+export function NgI18nAotServiceFactory(options: {locales?: {[key: string]: string}, forceLocaleExists?: boolean}): NgI18nAotService {
+    return new NgI18nAotService(options.hasOwnProperty('locales') ? options.locales : {}, options.hasOwnProperty('forceLocaleExists') ? options.forceLocaleExists : false);
+}
+
+
 @NgModule({
     declarations: [NgI18nAotDirective],
     exports:      [NgI18nAotDirective]
 })
 export class NgI18nAotModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(options?: {locales?: {[key: string]: string}, forceLocaleExists?: boolean}): ModuleWithProviders {
         return {
             ngModule:  NgI18nAotModule,
-            providers: [NgI18nAotService]
+            providers: [
+                {
+                    provide:    NgI18nAotService,
+                    useFactory: NgI18nAotServiceFactory,
+                    deps:       [options || {}]
+                }
+            ]
         }
     }
 }
