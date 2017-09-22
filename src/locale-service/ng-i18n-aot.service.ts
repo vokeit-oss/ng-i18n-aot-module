@@ -69,7 +69,7 @@ export class NgI18nAotService {
      * Register multiple locales on the locale map
      */
     public registerLocales(locales: {[key: string]: string}): void {
-        for (var code in locales) {
+        for(let code in locales) {
             if(!locales.hasOwnProperty(code)) {
                 continue;
             }

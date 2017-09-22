@@ -85,7 +85,9 @@ export class NgI18nAotDirective implements AfterViewInit, OnDestroy {
     
     
     public ngOnDestroy(): void {
-        this.ngI18nAotServiceUnsubscribeCallback();
+        if(this.ngI18nAotServiceUnsubscribeCallback) {
+            this.ngI18nAotServiceUnsubscribeCallback();
+        }
     }
     
     
