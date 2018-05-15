@@ -1,6 +1,6 @@
 {
     "name":             "@actra-development-oss/ng-i18n-aot-module",
-    "description":      "angular 4 / 5 i18n supporter module for @actra-development-oss/ng-i18n-aot-loader",
+    "description":      "angular 6 i18n supporter module for @actra-development-oss/ng-i18n-aot-loader",
     "keywords":         [
         "angular",
         "aot",
@@ -8,7 +8,7 @@
         "webpack"
     ],
     "license":          "MIT",
-    "version":          "1.1.4",
+    "version":          "2.0.0",
     "author":           {
         "name":  "Gabriel Schuster - actra.development",
         "email": "opensource@actra.de",
@@ -24,7 +24,7 @@
         "email": "opensource@actra.de"
     },
     "peerDependencies": {
-        "@angular/core": "^4.1.0 || 5.0.0-beta.0 - 5.0.0-beta.3"
+        "@angular/core": "^6.0.1"
     },
     "files":            [
         "locale-service/",

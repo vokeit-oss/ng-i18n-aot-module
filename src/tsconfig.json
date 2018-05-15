@@ -1,7 +1,8 @@
 {
     "angularCompilerOptions": {
-    "skipTemplateCodegen":    true,
-        "strictMetadataEmit": true
+		"disableTypeScriptVersionCheck": true,
+		"skipTemplateCodegen":    		 true,
+        "strictMetadataEmit": 			 true
     },
     "compilerOptions":        {
         "baseUrl":                ".",
