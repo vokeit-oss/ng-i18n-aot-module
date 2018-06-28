@@ -175,10 +175,10 @@ export class NgI18nAotService {
         if(!(id in this.translationIdMap)) {
             this.translationIdMap[id] = <{[key: string]: (display: boolean) => void}>{};
         }
-        
+
         this.translationIdMap[id][isDefault ? DefaultLocaleIdentifier : locale] = renderer;
-        
-        this.render(id, this.getLocale());
+
+        this.renderPartial(id, isDefault ? DefaultLocaleIdentifier : locale, this.getLocale());
         
         return () => { delete this.translationIdMap[id][isDefault ? DefaultLocaleIdentifier : locale]; };
     }
@@ -205,5 +205,16 @@ export class NgI18nAotService {
             
             return true;
         });
+    }
+
+    /**
+     * Render one locale of a single translatable container
+     */
+    protected renderPartial(id: string, targetLocale: string, currentLocale: string): void {
+        let setLocale: string = Object.keys(this.translationIdMap[id]).filter((checkLocale: string) => !!(checkLocale === currentLocale)).length ? currentLocale : DefaultLocaleIdentifier;
+        let renderer = this.translationIdMap[id][targetLocale];
+        if(renderer) {
+            renderer((setLocale === targetLocale));
+        }
     }
 }
