@@ -207,12 +207,16 @@ export class NgI18nAotService {
         });
     }
 
+
     /**
      * Render one locale of a single translatable container
      */
     protected renderPartial(id: string, targetLocale: string, currentLocale: string): void {
-        let setLocale: string = Object.keys(this.translationIdMap[id]).filter((checkLocale: string) => !!(checkLocale === currentLocale)).length ? currentLocale : DefaultLocaleIdentifier;
-        let renderer = this.translationIdMap[id][targetLocale];
+        let renderer: (display: boolean) => void = this.translationIdMap[id][targetLocale];
+        let setLocale: string                    = Object.keys(this.translationIdMap[id])
+			.filter((checkLocale: string) => !!(checkLocale === currentLocale))
+			.length ? currentLocale : DefaultLocaleIdentifier;
+
         if(renderer) {
             renderer((setLocale === targetLocale));
         }
